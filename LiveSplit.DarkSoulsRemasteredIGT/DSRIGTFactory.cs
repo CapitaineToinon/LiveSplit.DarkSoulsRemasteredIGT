@@ -15,7 +15,7 @@ namespace LiveSplit.DarkSoulsRemasteredIGT
 
         public ComponentCategory Category => ComponentCategory.Timer;
         public string UpdateURL => "https://raw.githubusercontent.com/CapitaineToinon/LiveSplit.DarkSoulsRemasteredIGT/livesplit-update";
-        public string XMLURL => UpdateURL + "LiveSplit.DarkSoulsRemasteredIGT/Components/update.LiveSplit.DarkSoulsRemastered.xml";
+        public string XMLURL => UpdateURL + "/LiveSplit.DarkSoulsRemasteredIGT/Components/update.LiveSplit.DarkSoulsRemastered.xml";
 
         public Version Version => Assembly.GetExecutingAssembly().GetName().Version;
 
