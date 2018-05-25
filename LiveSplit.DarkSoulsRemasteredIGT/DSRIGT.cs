@@ -37,7 +37,7 @@ namespace LiveSplit.DarkSoulsRemasteredIGT
                         _latch = true;
                     }
 
-                    return _IGT;
+                    return _IGT * 2;
                 }
                 else
                 {
