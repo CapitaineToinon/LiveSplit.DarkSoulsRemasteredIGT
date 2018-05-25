@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace LiveSplit.DarkSoulsRemasteredIGT
 {
@@ -33,7 +34,7 @@ namespace LiveSplit.DarkSoulsRemasteredIGT
                         // When you quitout, the game saves the IGT to the savefile but the timer
                         // actually keeps ticking for 18 more frames. So we remove that from the
                         // actual timer.
-                        _IGT -= 33 * 16; // DSRIGTConfig.TimerQuitoutDelay; // 594ms or 33ms * 18
+                        _IGT -= DSRIGTConfig.TimerQuitoutDelay;
                         _latch = true;
                     }
 
@@ -46,6 +47,11 @@ namespace LiveSplit.DarkSoulsRemasteredIGT
                     return _IGT;
                 }
             }
+        }
+
+        private void Debug()
+        {
+
         }
 
         public DSRIGT()

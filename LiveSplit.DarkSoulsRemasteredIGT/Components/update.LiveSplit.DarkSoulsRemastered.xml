@@ -1,4 +1,17 @@
 ﻿<updates>
+  <update version="1.1.0.0">
+    <files>
+      <file path="Components/LiveSplit.DarkSoulsRemasteredIGT.dll" status="changed" />
+    </files>
+    <changelog>
+      <change>
+        Added LiveSplit self update support
+      </change>
+      <change>
+        Fixed the quitout rollback delay
+      </change>
+    </changelog>
+  </update>
   <update version="1.0.0.0">
     <files>
       <file path="Components/LiveSplit.DarkSoulsRemasteredIGT.dll" status="changed" />
