@@ -1,0 +1,12 @@
+﻿<updates>
+  <update version="1.0.0.0">
+    <files>
+      <file path="Components/LiveSplit.DarkSoulsRemasteredIGT.dll" status="changed" />
+    </files>
+    <changelog>
+      <change>
+        Initial release (1.0.0.0)
+      </change>
+    </changelog>
+  </update>
+</updates>
