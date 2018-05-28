@@ -7,6 +7,7 @@ namespace LiveSplit.DarkSoulsRemasteredIGT
     internal class DSRIGT
     {
         private Process _game;
+        private long IGTAddress;
         private bool _latch = true;
 
         private bool IsHooked => (_game != null && !_game.HasExited);
@@ -18,7 +19,7 @@ namespace LiveSplit.DarkSoulsRemasteredIGT
             {
                 if (IsHooked)
                 {
-                    IntPtr ptr = (IntPtr)DSRIGTMemory.RInt32(_game.Handle, DSRIGTConfig.GetIGTAddress(_game.MainModule.ModuleMemorySize));
+                    IntPtr ptr = (IntPtr)DSRIGTMemory.RInt32(_game.Handle, IGTAddress);
                     int tmpIGT = DSRIGTMemory.RInt32(_game.Handle, IntPtr.Add(ptr, DSRIGTConfig.IGTOffset));
 
                     // If not in the main menu, update the timer normally
@@ -65,13 +66,26 @@ namespace LiveSplit.DarkSoulsRemasteredIGT
             Process[] candidates = Process.GetProcessesByName(DSRIGTConfig.Module);
             if (candidates.Length > 0 && !candidates.First().HasExited)
             {
-                _game = candidates.First();
-                _game.EnableRaisingEvents = true;
-                _game.Exited += Game_Exited;
-                return true;
-            } else
+                Process tmp = candidates.First();
+                // Check the game version
+                if (DSRIGTConfig.IGTAddresses.ContainsKey(tmp.MainModule.ModuleMemorySize))
+                {
+                    _game = tmp;
+                    _game.EnableRaisingEvents = true;
+                    _game.Exited += Game_Exited;
+                    IGTAddress = DSRIGTConfig.IGTAddresses[_game.MainModule.ModuleMemorySize];
+                    return true;
+                }
+                else
+                {
+                    Unhook();
+                    IGTAddress = 0;
+                    return false;
+                }
+            }
+            else
             {
-                _game = null;
+                Unhook();
                 return false;
             }
         }
@@ -90,6 +104,7 @@ namespace LiveSplit.DarkSoulsRemasteredIGT
         public void Unhook()
         {
             _game = null;
+            IGTAddress = 0;
         }
     }
 }
