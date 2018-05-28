@@ -10,14 +10,12 @@ namespace LiveSplit.DarkSoulsRemasteredIGT
     {
         private LiveSplitState state;
         private DSRIGT dsigt;
-        private int localIGT;
 
         public override string ComponentName => "Dark Souls Remastered In-Game Timer";
 
         public DSRIGTComponent(LiveSplitState state)
         {
             dsigt = new DSRIGT();
-            localIGT = 0;
 
             this.state = state;
             this.state.IsGameTimePaused = true;
@@ -27,7 +25,6 @@ namespace LiveSplit.DarkSoulsRemasteredIGT
 
         private void Reset()
         {
-            localIGT = 0;
             dsigt.Reset();
         }
 
@@ -53,13 +50,8 @@ namespace LiveSplit.DarkSoulsRemasteredIGT
 
         public override void Update(IInvalidator invalidator, LiveSplitState state, float width, float height, LayoutMode mode)
         {
-            if (state.CurrentPhase == TimerPhase.Running)
-            {
-                localIGT = dsigt.IGT;
-            }
-
             state.IsGameTimePaused = true;
-            state.SetGameTime(new TimeSpan(0, 0, 0, 0, localIGT));
+            state.SetGameTime(new TimeSpan(0, 0, 0, 0, dsigt.IGT));
         }
     }
 }

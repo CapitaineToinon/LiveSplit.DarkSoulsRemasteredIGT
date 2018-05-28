@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Windows.Forms;
 
 namespace LiveSplit.DarkSoulsRemasteredIGT
 {
     internal class DSRIGT
     {
         private Process _game;
-
         private bool _latch = true;
+
+        private bool IsHooked => (_game != null && !_game.HasExited);
 
         private int _IGT = 0;
         public int IGT
         {
             get
             {
-                if (_game != null && !_game.HasExited)
+                if (IsHooked)
                 {
-                    IntPtr ptr = (IntPtr)DSRIGTMemory.RInt32(_game.Handle, DSRIGTConfig.IGTBase);
+                    IntPtr ptr = (IntPtr)DSRIGTMemory.RInt32(_game.Handle, DSRIGTConfig.GetIGTAddress(_game.MainModule.ModuleMemorySize));
                     int tmpIGT = DSRIGTMemory.RInt32(_game.Handle, IntPtr.Add(ptr, DSRIGTConfig.IGTOffset));
 
                     // If not in the main menu, update the timer normally
@@ -47,11 +47,6 @@ namespace LiveSplit.DarkSoulsRemasteredIGT
                     return _IGT;
                 }
             }
-        }
-
-        private void Debug()
-        {
-
         }
 
         public DSRIGT()
@@ -95,7 +90,6 @@ namespace LiveSplit.DarkSoulsRemasteredIGT
         public void Unhook()
         {
             _game = null;
-            //_IGTPointer = IntPtr.Zero;
         }
     }
 }
