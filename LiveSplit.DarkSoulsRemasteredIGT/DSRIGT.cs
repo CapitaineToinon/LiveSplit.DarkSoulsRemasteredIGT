@@ -7,7 +7,7 @@ namespace LiveSplit.DarkSoulsRemasteredIGT
     internal class DSRIGT
     {
         private Process _game;
-        private long IGTAddress;
+        private IntPtr IGTAddress;
         private bool _latch = true;
 
         private bool IsHooked => (_game != null && !_game.HasExited);
@@ -66,22 +66,11 @@ namespace LiveSplit.DarkSoulsRemasteredIGT
             Process[] candidates = Process.GetProcessesByName(DSRIGTConfig.Module);
             if (candidates.Length > 0 && !candidates.First().HasExited)
             {
-                Process tmp = candidates.First();
-                // Check the game version
-                if (DSRIGTConfig.IGTAddresses.ContainsKey(tmp.MainModule.ModuleMemorySize))
-                {
-                    _game = tmp;
-                    _game.EnableRaisingEvents = true;
-                    _game.Exited += Game_Exited;
-                    IGTAddress = DSRIGTConfig.IGTAddresses[_game.MainModule.ModuleMemorySize];
-                    return true;
-                }
-                else
-                {
-                    Unhook();
-                    IGTAddress = 0;
-                    return false;
-                }
+                _game = candidates.First();
+                _game.EnableRaisingEvents = true;
+                _game.Exited += Game_Exited;
+                IGTAddress = DSRIGTMemory.Scan(_game, DSRIGTConfig.ArrayOfBytes, DSRIGTConfig.ArrayOfByteOffset);
+                return true;
             }
             else
             {
@@ -104,7 +93,7 @@ namespace LiveSplit.DarkSoulsRemasteredIGT
         public void Unhook()
         {
             _game = null;
-            IGTAddress = 0;
+            IGTAddress = IntPtr.Zero;
         }
     }
 }
