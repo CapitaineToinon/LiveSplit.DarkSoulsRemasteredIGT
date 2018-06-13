@@ -59,6 +59,9 @@ namespace LiveSplit.DarkSoulsRemasteredIGT
         {
             _IGT = 0;
             _latch = true;
+
+            if (IsHooked)
+                DSRInventoryReset.ResetInventory(_game);
         }
 
         private bool GetProcess()
