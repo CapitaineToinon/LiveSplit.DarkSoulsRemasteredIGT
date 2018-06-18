@@ -13,22 +13,23 @@
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>Components\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="LiveSplit.Core">
@@ -49,14 +50,28 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DSRIGT.cs" />
-    <Compile Include="DSRIGTComponent.cs" />
-    <Compile Include="DSRIGTConfig.cs" />
-    <Compile Include="DSRIGTFactory.cs" />
-    <Compile Include="DSRIGTMemory.cs" />
+    <Compile Include="DSRConfig.cs" />
+    <Compile Include="IGT\DSRIGT.cs" />
+    <Compile Include="DSRComponent.cs" />
+    <Compile Include="IGT\DSRIGTConfig.cs" />
+    <Compile Include="DSRFactory.cs" />
+    <Compile Include="DSRMemory.cs" />
+    <Compile Include="DSRProcess.cs" />
+    <Compile Include="InventoryReset\DSRInventoryIndexConfig.cs" />
+    <Compile Include="InventoryReset\DSRInventoryReset.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UI\DSRSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\DSRSettings.Designer.cs">
+      <DependentUpon>DSRSettings.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="UI\DSRSettings.resx">
+      <DependentUpon>DSRSettings.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Components\update.LiveSplit.DarkSoulsRemastered.xml" />
   </ItemGroup>

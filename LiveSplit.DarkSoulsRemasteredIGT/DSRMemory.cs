@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace LiveSplit.DarkSoulsRemasteredIGT
 {
-    internal static class DSRIGTMemory
+    internal static class DSRMemory
     {
         #region [Memory functions]
         [DllImport("kernel32.dll", SetLastError = true)]
@@ -70,7 +70,7 @@ namespace LiveSplit.DarkSoulsRemasteredIGT
             public uint Type;
         }
 
-        private static Dictionary<IntPtr, byte[]> GetMemory(Process process)
+        public static Dictionary<IntPtr, byte[]> GetMemory(Process process)
         {
             List<MEMORY_BASIC_INFORMATION> memRegions = new List<MEMORY_BASIC_INFORMATION>();
 
@@ -101,10 +101,9 @@ namespace LiveSplit.DarkSoulsRemasteredIGT
             return readMemory;
         }
         
-        public static IntPtr Scan(Process process, byte?[] aob)
+        public static IntPtr Scan(Process process, Dictionary<IntPtr, byte[]> readMemory, byte?[] aob)
         {
             List<IntPtr> results = new List<IntPtr>();
-            Dictionary<IntPtr, byte[]> readMemory = GetMemory(process);
 
             foreach (IntPtr baseAddress in readMemory.Keys)
             {
@@ -131,18 +130,18 @@ namespace LiveSplit.DarkSoulsRemasteredIGT
 
             if (results.Count == 0)
             {
-                throw new ArgumentException(string.Format(DSRIGTConfig.AOBNotFound, aob.ToString()));
+                throw new ArgumentException(string.Format(DSRConfig.AOBNotFound, aob.ToString()));
             }
             else if (results.Count > 1)
             {
-                throw new ArgumentException(string.Format(DSRIGTConfig.AOBMultiple, results.Count, aob.ToString()));
+                throw new ArgumentException(string.Format(DSRConfig.AOBMultiple, results.Count, aob.ToString()));
             }
             return results[0];
         }
 
-        public static IntPtr Scan(Process process, byte?[] aob, int offset)
+        public static IntPtr Scan(Process process, Dictionary<IntPtr, byte[]> readMemory, byte?[] aob, int offset)
         {
-            IntPtr result = Scan(process, aob);
+            IntPtr result = Scan(process, readMemory, aob);
             return result + RInt32(process.Handle, result + offset) + offset + 4;
         }
         #endregion

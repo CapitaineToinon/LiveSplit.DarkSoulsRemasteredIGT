@@ -1,20 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace LiveSplit.DarkSoulsRemasteredIGT
 {
-    internal static class DSRInventoryReset
+    internal static class DSRInventoryIndexConfig
     {
-        private static Dictionary<int, UInt32> InventoryAddresses = new Dictionary<int, UInt32>()
+        public static int ArrayOfByteOffset = 14;
+        public static byte?[] ArrayOfBytes = new byte?[]
         {
-            { DSRIGTConfig.ModuleSizes["1.01"], 0x1AA8F00 },
-            { DSRIGTConfig.ModuleSizes["1.01.1"], 0x1A38F10 },
+            0x4C, 0x8B, 0x65, 0xEF, 0x4C, 0x8B, 0x6D, 0x0F, 0x49, 0x63, 0xC6, 0x48, 0x8D, 0x0D, null, null, null, null, 0x8B, 0x14, 0x81, 0x83, 0xFA, 0xFF
         };
 
-        private static UInt32[] GetEquipementSlots(UInt32 baseAddress)
+        public static IntPtr[] GetInventoryAddresses(IntPtr baseAddress)
         {
-            return new UInt32[]
+            return new IntPtr[]
             {
                 baseAddress,            // slot 7
                 baseAddress+0x4,        // slot 0
@@ -31,24 +29,11 @@ namespace LiveSplit.DarkSoulsRemasteredIGT
                 baseAddress+0x20+0xC,   // slot 17
                 baseAddress+0x34,       // slot 18
                 baseAddress+0x34+0x4,   // slot 19
-                baseAddress+0x10+0x8,   // slot 10
+                baseAddress+0x10,       // slot 9
                 baseAddress+0x10+0x8,   // slot 10
                 baseAddress+0x14,       // slot 11
                 baseAddress+0x14+0x8,   // slot 12
             };
-        }
-
-        public static void Reset(Process darksouls)
-        {
-            if (darksouls != null && !darksouls.HasExited)
-            {
-                UInt32 baseAddress = InventoryAddresses[darksouls.MainModule.ModuleMemorySize];
-                foreach (UInt32 equipementSlot in GetEquipementSlots(baseAddress))
-                {
-                    IntPtr p = IntPtr.Add(darksouls.MainModule.BaseAddress, (int)equipementSlot);
-                    DSRIGTMemory.WUInt32(darksouls.Handle, p, 0); // Reset the index
-                }
-            }
         }
     }
 }
