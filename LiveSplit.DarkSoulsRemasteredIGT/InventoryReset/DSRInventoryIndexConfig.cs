@@ -1,14 +1,18 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace LiveSplit.DarkSoulsRemasteredIGT
 {
-    internal static class DSRInventoryReset
+    internal static class DSRInventoryIndexConfig
     {
-        private static UInt32 baseAddress = 0x1AA8F00;
-        private static UInt32[] GetEquiments(UInt32 baseAddress)
+        public static int ArrayOfByteOffset = 14;
+        public static byte?[] ArrayOfBytes = new byte?[]
         {
-            return new UInt32[]
+            0x4C, 0x8B, 0x65, 0xEF, 0x4C, 0x8B, 0x6D, 0x0F, 0x49, 0x63, 0xC6, 0x48, 0x8D, 0x0D, null, null, null, null, 0x8B, 0x14, 0x81, 0x83, 0xFA, 0xFF
+        };
+
+        public static IntPtr[] GetInventoryAddresses(IntPtr baseAddress)
+        {
+            return new IntPtr[]
             {
                 baseAddress,            // slot 7
                 baseAddress+0x4,        // slot 0
@@ -30,17 +34,6 @@ namespace LiveSplit.DarkSoulsRemasteredIGT
                 baseAddress+0x14,       // slot 11
                 baseAddress+0x14+0x8,   // slot 12
             };
-        }
-
-        public static void ResetInventory(Process darksouls)
-        {
-            // Foreach equipement slot...
-            foreach (UInt32 equipementSlot in GetEquiments(baseAddress))
-            {
-                // Gets the address to the value of the index
-                IntPtr p = IntPtr.Add(darksouls.MainModule.BaseAddress, (int)equipementSlot);
-                DSRIGTMemory.WUInt32(darksouls.Handle, p, 0); // Sets the value to 0 (default top of the inventory)
-            }
         }
     }
 }

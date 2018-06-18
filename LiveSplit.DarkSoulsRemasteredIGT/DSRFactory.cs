@@ -4,10 +4,10 @@ using LiveSplit.UI.Components;
 using System;
 using System.Reflection;
 
-[assembly: ComponentFactory(typeof(DSRIGTFactory))]
+[assembly: ComponentFactory(typeof(DSRFactory))]
 namespace LiveSplit.DarkSoulsRemasteredIGT
 {
-    internal class DSRIGTFactory : IComponentFactory
+    internal class DSRFactory : IComponentFactory
     {
         public string ComponentName => "Dark Souls Remastered In-Game Timer";
         public string Description => "Dark Souls Remastered In-Game Timer by CapitaineToinon";
@@ -21,7 +21,7 @@ namespace LiveSplit.DarkSoulsRemasteredIGT
 
         public IComponent Create(LiveSplitState state)
         {
-            return new DSRIGTComponent(state);
+            return new DSRComponent(state);
         }
     }
 }

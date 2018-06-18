@@ -6,16 +6,23 @@ using System.Xml;
 
 namespace LiveSplit.DarkSoulsRemasteredIGT
 {
-    public class DSRIGTComponent : LogicComponent
+    public class DSRComponent : LogicComponent
     {
         private LiveSplitState state;
+
+        private DSRProcess gameProcess;
         private DSRIGT dsigt;
+        private DSRInventoryReset inventoryReset;
+        private DSRSettings settings;
 
         public override string ComponentName => "Dark Souls Remastered In-Game Timer";
 
-        public DSRIGTComponent(LiveSplitState state)
+        public DSRComponent(LiveSplitState state)
         {
-            dsigt = new DSRIGT();
+            gameProcess = new DSRProcess();
+            dsigt = new DSRIGT(gameProcess);
+            inventoryReset = new DSRInventoryReset(gameProcess);
+            settings = new DSRSettings();
 
             this.state = state;
             this.state.IsGameTimePaused = true;
@@ -26,31 +33,36 @@ namespace LiveSplit.DarkSoulsRemasteredIGT
         private void Reset()
         {
             dsigt.Reset();
+
+            if (settings.InventoryResetEnabled)
+            {
+                inventoryReset.ResetInventory();
+            }
         }
 
         public override void Dispose()
         {
-            dsigt.Unhook();
+            gameProcess.Unhook();
         }
 
         public override XmlNode GetSettings(XmlDocument document)
         {
-            return document.CreateElement("Settings");
+            return this.settings.GetSettings(document);
         }
 
         public override System.Windows.Forms.Control GetSettingsControl(LayoutMode mode)
         {
-            return null;
+            return this.settings;
         }
 
         public override void SetSettings(XmlNode settings)
         {
-
+            this.settings.SetSettings(settings);
         }
 
         public override void Update(IInvalidator invalidator, LiveSplitState state, float width, float height, LayoutMode mode)
         {
-            state.IsGameTimePaused = true;
+            state.IsGameTimePaused = true; // Avoids flickering 
             state.SetGameTime(new TimeSpan(0, 0, 0, 0, dsigt.IGT));
         }
     }
