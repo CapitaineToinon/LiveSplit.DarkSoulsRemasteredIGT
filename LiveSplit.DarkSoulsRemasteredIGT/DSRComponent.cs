@@ -42,7 +42,7 @@ namespace LiveSplit.DarkSoulsRemasteredIGT
 
         public override void Dispose()
         {
-            gameProcess.Unhook();
+            gameProcess.Dispose();
         }
 
         public override XmlNode GetSettings(XmlDocument document)
@@ -62,7 +62,7 @@ namespace LiveSplit.DarkSoulsRemasteredIGT
 
         public override void Update(IInvalidator invalidator, LiveSplitState state, float width, float height, LayoutMode mode)
         {
-            state.IsGameTimePaused = true; // Avoids flickering 
+            gameProcess.Update();
             state.SetGameTime(new TimeSpan(0, 0, 0, 0, dsigt.IGT));
         }
     }
