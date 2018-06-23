@@ -1,4 +1,17 @@
 ﻿<updates>
+  <update version="2.2.0.0">
+    <files>
+      <file path="Components/LiveSplit.DarkSoulsRemasteredIGT.dll" status="changed" />
+    </files>
+    <changelog>
+      <change>
+        Fixed a bug in which sometimes, LiveSplit wouldn't hook the game again after being closed.
+      </change>
+      <change>
+        Logic refactoring. 
+      </change>
+    </changelog>
+  </update>
   <update version="2.1.0.0">
     <files>
       <file path="Components/LiveSplit.DarkSoulsRemasteredIGT.dll" status="changed" />

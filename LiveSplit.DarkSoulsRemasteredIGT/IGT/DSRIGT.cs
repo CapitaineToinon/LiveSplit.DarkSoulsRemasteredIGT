@@ -43,22 +43,32 @@ namespace LiveSplit.DarkSoulsRemasteredIGT
 
                         lastUpdate = stopwatch.ElapsedMilliseconds;
                     }
+                }
 
-                    return _IGT;
-                }
-                else
-                {
-                    // Tries to hook the game for the next call
-                    Hook();
-                    return _IGT;
-                }
+                return _IGT;
             }
         }
 
         public DSRIGT(DSRProcess gameProcess)
         {
             this.gameProcess = gameProcess;
-            Hook();
+            this.gameProcess.ProcessHooked += GameProcess_ProcessHooked;
+            this.gameProcess.ProcessHasExited += GameProcess_ProcessHasExited;
+        }
+
+        private void GameProcess_ProcessHooked(object sender, EventArgs e)
+        {
+            // Game hooked! Find the IGT address using AOB scanning
+            IGTAddress = gameProcess.Scan(DSRIGTConfig.ArrayOfBytes, DSRIGTConfig.ArrayOfByteOffset);
+            lastUpdate = 0;
+            stopwatch.Restart();
+        }
+
+        private void GameProcess_ProcessHasExited(object sender, EventArgs e)
+        {
+            IGTAddress = IntPtr.Zero;
+            lastUpdate = 0;
+            stopwatch.Stop();
         }
 
         public void Reset()
@@ -67,22 +77,6 @@ namespace LiveSplit.DarkSoulsRemasteredIGT
             latch = true;
             lastUpdate = 0;
             stopwatch.Restart();
-        }
-
-        private void Hook()
-        {
-            if (gameProcess.Hook())
-            {
-                // Game hooked! Find the IGT address using AOB scanning
-                IGTAddress = gameProcess.Scan(DSRIGTConfig.ArrayOfBytes, DSRIGTConfig.ArrayOfByteOffset);
-                lastUpdate = 0;
-                stopwatch.Restart();
-            } else
-            {
-                IGTAddress = IntPtr.Zero;
-                lastUpdate = 0;
-                stopwatch.Stop();
-            }
         }
     }
 }
